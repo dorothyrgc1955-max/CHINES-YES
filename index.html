@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中文考试 | แบบทดสอบภาษาจีน ป.2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Mali', cursive;
+            background-color: #f0fdf4;
+        }
+        .zh-text {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        .choice-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .choice-btn.selected {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #2563eb;
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 text-gray-800">
+
+    <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10 border-t-8 border-red-500">
+        
+        <!-- ส่วนหัวข้อสอบ -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-red-600 mb-2 zh-text tracking-wide">🇨🇳 中文考试 🐼</h1>
+            <h2 class="text-xl font-bold text-gray-600 mb-2">(แบบทดสอบภาษาจีน ป.2)</h2>
+            <p class="text-gray-500">ทดสอบคำศัพท์พื้นฐาน 30 ข้อ</p>
+        </div>
+
+        <!-- หน้ากรอกข้อมูลก่อนเริ่มสอบ -->
+        <div id="intro-section" class="bg-red-50 p-6 rounded-xl border-2 border-red-200 shadow-sm mb-8">
+            <h2 class="text-xl font-bold text-red-800 mb-4 text-center zh-text">👇 请输入你的信息 (กรอกข้อมูลก่อนทำข้อสอบนะจ๊ะ) 👇</h2>
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-lg font-bold mb-2" for="student-name">
+                    <span class="zh-text text-red-600 text-xl">姓名</span> (ชื่อ - นามสกุล)
+                </label>
+                <input class="shadow appearance-none border-2 border-red-300 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:border-red-500 text-lg" id="student-name" type="text" placeholder="ด.ช. / ด.ญ. อะไรเอ่ย?">
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 text-lg font-bold mb-2" for="student-grade">
+                    <span class="zh-text text-red-600 text-xl">班级</span> (ชั้น / ห้อง)
+                </label>
+                <input class="shadow appearance-none border-2 border-red-300 rounded-xl w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:border-red-500 text-lg" id="student-grade" type="text" placeholder="เช่น ป.2/1 หรือ G.2">
+            </div>
+
+            <button onclick="startQuiz()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full text-xl shadow-md w-full transition-transform transform hover:scale-105 zh-text tracking-wider">
+                开始考试 (เริ่มทำข้อสอบเลย!) 🚀
+            </button>
+        </div>
+
+        <!-- ส่วนของข้อสอบ (ซ่อนไว้ตอนแรก) -->
+        <div id="quiz-main" class="hidden">
+            <div class="bg-yellow-100 p-4 rounded-lg text-center mb-6 font-semibold text-yellow-800 border-2 border-yellow-300">
+                <span class="zh-text">姓名</span> (ชื่อ): <span id="display-name-top" class="text-blue-600"></span> | <span class="zh-text">班级</span> (ชั้น): <span id="display-grade-top" class="text-blue-600"></span>
+            </div>
+            
+            <div id="quiz-container">
+                <!-- ข้อสอบจะถูกสร้างตรงนี้ด้วย JavaScript -->
+            </div>
+
+            <div class="mt-8 text-center">
+                <button id="submit-btn" onclick="calculateScore()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-full text-2xl shadow-lg w-full md:w-auto transition-transform transform hover:scale-105 zh-text tracking-wider">
+                    提交 (ส่งคำตอบ) 📤
+                </button>
+            </div>
+        </div>
+
+        <!-- หน้าสรุปผลคะแนน -->
+        <div id="result-container" class="hidden mt-8 p-6 bg-yellow-100 rounded-xl text-center border-4 border-yellow-400 shadow-xl">
+            <h2 class="text-3xl font-bold text-yellow-700 mb-4 zh-text">🎉 考试结束! (ตรวจคำตอบเสร็จแล้ว!) 🎉</h2>
+            <div class="bg-white p-4 rounded-lg mb-4 shadow-inner inline-block text-left border-2 border-yellow-200">
+                <p class="text-lg font-bold text-gray-700 mb-2"><span class="zh-text text-red-500 text-xl">姓名</span> (ชื่อ): <span id="result-name" class="text-blue-600"></span></p>
+                <p class="text-lg font-bold text-gray-700"><span class="zh-text text-red-500 text-xl">班级</span> (ชั้น): <span id="result-grade" class="text-blue-600"></span></p>
+            </div>
+            <p class="text-2xl mt-4 font-bold text-gray-800"><span class="zh-text text-red-600 text-3xl">成绩</span> (หนูทำได้): <span id="score-display" class="text-6xl font-extrabold text-red-500 mx-2"></span> / 30</p>
+            <p id="feedback-text" class="mt-4 text-xl font-semibold text-green-700"></p>
+            <button onclick="location.reload()" class="mt-8 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-8 rounded-full shadow-md text-lg transition-transform transform hover:scale-105 zh-text tracking-wider">
+                再来一次 (ทำใหม่อีกครั้ง) 🔄
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "1. 你好 (nǐhǎo) แปลว่าอะไร?", choices: ["ก. สวัสดี", "ข. ขอบคุณ", "ค. ลาก่อน", "ง. ขอโทษ"], ans: 0 },
+            { q: "2. 谢谢 (xièxiè) แปลว่าอะไร?", choices: ["ก. ขอโทษ", "ข. ขอบคุณ", "ค. ไม่เป็นไร", "ง. ลาก่อน"], ans: 1 },
+            { q: "3. 老师 (lǎoshī) แปลว่าอะไร?", choices: ["ก. นักเรียน", "ข. หมอ", "ค. คุณครู", "ง. ตำรวจ"], ans: 2 },
+            { q: "4. 一 (yī) คือเลขอะไร?", choices: ["ก. 1", "ข. 2", "ค. 3", "ง. 4"], ans: 0 },
+            { q: "5. 二 (èr) คือเลขอะไร?", choices: ["ก. 1", "ข. 2", "ค. 3", "ง. 4"], ans: 1 },
+            { q: "6. 三 (sān) คือเลขอะไร?", choices: ["ก. 1", "ข. 2", "ค. 3", "ง. 4"], ans: 2 },
+            { q: "7. 爸爸 (bàba) แปลว่าอะไร?", choices: ["ก. พ่อ", "ข. แม่", "ค. พี่ชาย", "ง. น้องชาย"], ans: 0 },
+            { q: "8. 妈妈 (māma) แปลว่าอะไร?", choices: ["ก. พ่อ", "ข. แม่", "ค. พี่สาว", "ง. น้องสาว"], ans: 1 },
+            { q: "9. 哥哥 (gēge) แปลว่าอะไร?", choices: ["ก. น้องชาย", "ข. พี่ชาย", "ค. น้องสาว", "ง. พี่สาว"], ans: 1 },
+            { q: "10. 姐姐 (jiějie) แปลว่าอะไร?", choices: ["ก. พี่สาว", "ข. น้องสาว", "ค. แม่", "ง. พ่อ"], ans: 0 },
+            { q: "11. 狗 (gǒu) แปลว่าอะไร?", choices: ["ก. แมว", "ข. นก", "ค. หมา", "ง. ปลา"], ans: 2 },
+            { q: "12. 猫 (māo) แปลว่าอะไร?", choices: ["ก. แมว", "ข. ปลา", "ค. หมู", "ง. นก"], ans: 0 },
+            { q: "13. 鸟 (niǎo) แปลว่าอะไร?", choices: ["ก. หมา", "ข. นก", "ค. ไก่", "ง. แมว"], ans: 1 },
+            { q: "14. 鱼 (yú) แปลว่าอะไร?", choices: ["ก. เต่า", "ข. ปลา", "ค. งู", "ง. นก"], ans: 1 },
+            { q: "15. 水 (shuǐ) แปลว่าอะไร?", choices: ["ก. ไฟ", "ข. ดิน", "ค. น้ำ", "ง. ลม"], ans: 2 },
+            { q: "16. 火 (huǒ) แปลว่าอะไร?", choices: ["ก. ไฟ", "ข. ลม", "ค. น้ำ", "ง. ดิน"], ans: 0 },
+            { q: "17. 红色 (hóngsè) คือสีอะไร?", choices: ["ก. สีขาว", "ข. สีดำ", "ค. สีแดง", "ง. สีเหลือง"], ans: 2 },
+            { q: "18. 白色 (báisè) คือสีอะไร?", choices: ["ก. สีขาว", "ข. สีฟ้า", "ค. สีเขียว", "ง. สีดำ"], ans: 0 },
+            { q: "19. 黑色 (hēisè) คือสีอะไร?", choices: ["ก. สีเหลือง", "ข. สีดำ", "ค. สีชมพู", "ง. สีขาว"], ans: 1 },
+            { q: "20. 头 (tóu) แปลว่าอะไร?", choices: ["ก. มือ", "ข. เท้า", "ค. หัว", "ง. ตา"], ans: 2 },
+            { q: "21. 手 (shǒu) แปลว่าอะไร?", choices: ["ก. มือ", "ข. ตา", "ค. จมูก", "ง. เท้า"], ans: 0 },
+            { q: "22. 眼睛 (yǎnjīng) แปลว่าอะไร?", choices: ["ก. ปาก", "ข. ตา", "ค. หู", "ง. จมูก"], ans: 1 },
+            { q: "23. 鼻子 (bízi) แปลว่าอะไร?", choices: ["ก. หู", "ข. ปาก", "ค. จมูก", "ง. ตา"], ans: 2 },
+            { q: "24. 嘴巴 (zuǐbā) แปลว่าอะไร?", choices: ["ก. ปาก", "ข. ตา", "ค. มือ", "ง. หู"], ans: 0 },
+            { q: "25. 吃 (chī) แปลว่าอะไร?", choices: ["ก. ดื่ม", "ข. กิน", "ค. เดิน", "ง. วิ่ง"], ans: 1 },
+            { q: "26. 喝 (hē) แปลว่าอะไร?", choices: ["ก. กิน", "ข. วิ่ง", "ค. ดื่ม", "ง. เดิน"], ans: 2 },
+            { q: "27. 苹果 (píngguǒ) แปลว่าอะไร?", choices: ["ก. แอปเปิล", "ข. กล้วย", "ค. ส้ม", "ง. แตงโม"], ans: 0 },
+            { q: "28. 再见 (zàijiàn) แปลว่าอะไร?", choices: ["ก. สวัสดี", "ข. ลาก่อน", "ค. ขอบคุณ", "ง. ขอโทษ"], ans: 1 },
+            { q: "29. 对不起 (duìbùqǐ) แปลว่าอะไร?", choices: ["ก. ขอโทษ", "ข. ไม่เป็นไร", "ค. สวัสดี", "ง. ลาก่อน"], ans: 0 },
+            { q: "30. 没关系 (méiguānxi) แปลว่าอะไร?", choices: ["ก. ขอบคุณ", "ข. ขอโทษ", "ค. ไม่เป็นไร", "ง. สวัสดี"], ans: 2 }
+        ];
+
+        let userAnswers = new Array(questions.length).fill(null);
+        let studentName = "";
+        let studentGrade = "";
+
+        function startQuiz() {
+            studentName = document.getElementById('student-name').value.trim();
+            studentGrade = document.getElementById('student-grade').value.trim();
+
+            if (studentName === "" || studentGrade === "") {
+                alert("⚠️ 警告! (คำเตือน) หนูต้องพิมพ์ชื่อกับชั้นเรียนให้ครบก่อนนะจ๊ะ!");
+                return;
+            }
+
+            document.getElementById('display-name-top').innerText = studentName;
+            document.getElementById('display-grade-top').innerText = studentGrade;
+
+            document.getElementById('intro-section').classList.add('hidden');
+            document.getElementById('quiz-main').classList.remove('hidden');
+            
+            renderQuiz();
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            let html = '';
+
+            questions.forEach((item, qIndex) => {
+                html += `
+                <div class="mb-8 p-5 bg-red-50 rounded-xl border-2 border-red-100 shadow-sm transition-all hover:shadow-md" id="q-block-${qIndex}">
+                    <h3 class="text-xl md:text-2xl font-bold mb-4 text-gray-800"><span class="zh-text text-red-600">问题</span> ${item.q}</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                `;
+                
+                item.choices.forEach((choice, cIndex) => {
+                    html += `
+                        <button 
+                            id="btn-${qIndex}-${cIndex}"
+                            onclick="selectAnswer(${qIndex}, ${cIndex})" 
+                            class="choice-btn w-full text-left p-4 bg-white border-2 border-gray-200 rounded-lg hover:bg-red-100 hover:border-red-300 font-bold text-lg focus:outline-none">
+                            ${choice}
+                        </button>
+                    `;
+                });
+
+                html += `</div></div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function selectAnswer(qIndex, cIndex) {
+            userAnswers[qIndex] = cIndex;
+            
+            for(let i=0; i<4; i++) {
+                document.getElementById(`btn-${qIndex}-${i}`).classList.remove('selected');
+            }
+            document.getElementById(`btn-${qIndex}-${cIndex}`).classList.add('selected');
+        }
+
+        function calculateScore() {
+            if(userAnswers.includes(null)) {
+                alert("⚠️ 注意! (ระวัง) หนูยังทำข้อสอบไม่ครบทุกข้อเลยจ้า เลื่อนขึ้นไปตรวจสอบดูก่อนนะ!");
+                const firstUnanswered = userAnswers.indexOf(null);
+                document.getElementById(`q-block-${firstUnanswered}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const block = document.getElementById(`q-block-${firstUnanswered}`);
+                block.classList.add('border-red-500', 'bg-red-100');
+                setTimeout(() => {
+                    block.classList.remove('border-red-500', 'bg-red-100');
+                }, 1500);
+                return;
+            }
+
+            let score = 0;
+            userAnswers.forEach((ans, index) => {
+                if(ans === questions[index].ans) {
+                    score++;
+                }
+            });
+
+            document.getElementById('quiz-main').classList.add('hidden');
+            document.getElementById('result-container').classList.remove('hidden');
+            
+            document.getElementById('result-name').innerText = studentName;
+            document.getElementById('result-grade').innerText = studentGrade;
+            document.getElementById('score-display').innerText = score;
+
+            let feedback = "";
+            if(score >= 25) feedback = "太棒了! (เก่งมากเลย!) หนูคือยอดมนุษย์ภาษาจีน! 🌟🏆";
+            else if(score >= 15) feedback = "很好! (ทำได้ดีมาก) พยายามฝึกอีกนิดนะ! 👍✨";
+            else feedback = "没关系! (ไม่เป็นไรนะ) กลับไปทบทวนแล้วมาทำใหม่ได้จ้า! ✌️📚";
+            
+            document.getElementById('feedback-text').innerText = feedback;
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
+    
+  </body>
+  
+</html>
